@@ -11,15 +11,17 @@ import org.junit.jupiter.api.Test;
 
 import com.intopays.sdk.IntopaysConstructor;
 import com.intopays.sdk.app.factories.WebhookFactory;
+import com.intopays.sdk.core.enums.EnvironmentTypeEnum;
 import com.intopays.sdk.core.models.Webhook;
+import com.intopays.sdk.infra.config.Environment;
+
 public class WebhookServiceTest {
-	private final String TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJzZGtAaW50b3BheXMuY29tIiwiaWF0IjoxNzEzMTMzMDMwfQ.0uOXAMSq09aasfUkDCzuvaKVUBBAZf0mU1uBz-UDXkQ";
-    private WebhookService webhookService;
+	private WebhookService webhookService;
 
     @BeforeEach
     public void setUp() {
         // Mock the remote dependency
-    	IntopaysConstructor config = new IntopaysConstructor(this.TOKEN, "development");
+    	IntopaysConstructor config = new IntopaysConstructor(Environment.get(EnvironmentTypeEnum.TEST).getToken(), EnvironmentTypeEnum.TEST.getValue());
         webhookService = WebhookFactory.createWebhookService(config);
     }
 

@@ -2,7 +2,9 @@ package com.intopays.sdk.infra.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intopays.sdk.IntopaysConstructor;
+import com.intopays.sdk.core.enums.EnvironmentTypeEnum;
 import com.intopays.sdk.core.models.Webhook;
+import com.intopays.sdk.infra.config.Environment;
 import com.intopays.sdk.infra.http.request.WebhookCreateData;
 
 import org.apache.http.client.methods.*;
@@ -23,7 +25,7 @@ public class WebhookRemote {
 
     public WebhookRemote(IntopaysConstructor config) {
         this.token = config.getToken();
-        this.baseUrl = "production".equalsIgnoreCase(config.getMode()) ? "https://app.intopays.com" : "http://localhost:8090";
+        this.baseUrl = Environment.get(EnvironmentTypeEnum.fromValue(config.getMode())).getHost();
     }
 
     public Webhook create(WebhookCreateData data) throws IOException {
