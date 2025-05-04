@@ -1,1 +1,43 @@
 .DS_Store
+# Maven specific
+target/
+*.log
+*.jar
+*.war
+*.ear
+
+# Eclipse specific
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA specific
+.idea/
+*.iml
+
+# NetBeans specific
+nbproject/private/
+
+# VS Code specific
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# JRebel specific
+.jrebel/
+
+# JetBrains specific
+out/
+
+# Gradle wrapper
+gradle/wrapper/gradle-wrapper.jar
+
+# Application-specific
+*.swp
+*~
+
+# Temporary files
+*.bak
+*.tmp
