@@ -1,6 +1,19 @@
 package com.intopays.sdk;
 
 public class IntopaysConstructor {
-	public String token;
-	public String mode;
+    private String token;
+    private String mode;
+
+    public IntopaysConstructor(String token, String mode) {
+        this.token = token;
+        this.mode = mode;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getMode() {
+        return mode;
+    }
 }

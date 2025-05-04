@@ -1,11 +1,12 @@
 package com.intopays.sdk;
 
-public class Intopays {
-    private final String token;
-    private final String mode;
+import com.intopays.sdk.app.factories.WebhookFactory;
+import com.intopays.sdk.core.services.WebhookService;
 
+public class Intopays {
+    public final WebhookService webhook;
+  
     public Intopays(IntopaysConstructor config) {
-        this.token = config.token;
-        this.mode = config.mode;
+        this.webhook = WebhookFactory.createWebhookService(config);
     }
 }
