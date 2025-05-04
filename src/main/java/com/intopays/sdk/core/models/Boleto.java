@@ -2,6 +2,7 @@ package com.intopays.sdk.core.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.intopays.sdk.core.enums.DiscountEnum;
 import com.intopays.sdk.core.enums.FineTypeEnum;
 import com.intopays.sdk.core.enums.IntegrationEnum;
@@ -9,6 +10,7 @@ import com.intopays.sdk.core.enums.InterestEnum;
 import com.intopays.sdk.core.enums.PaymentStatusEnum;
 import com.intopays.sdk.core.enums.StateEnum;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Boleto {
 
     /** Identificador único do boleto */

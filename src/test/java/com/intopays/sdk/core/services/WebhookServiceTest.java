@@ -22,14 +22,13 @@ import com.intopays.sdk.core.models.Webhook;
 import com.intopays.sdk.infra.config.Environment;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)  // Allows control over test order if needed
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WebhookServiceTest {
 	private WebhookService webhookService;
 	private Webhook createdWebhook; 
 	
     @BeforeEach
     public void setUp() {
-        // Mock the remote dependency
     	IntopaysConstructor config = new IntopaysConstructor(Environment.get(EnvironmentTypeEnum.TEST).getToken(), EnvironmentTypeEnum.TEST);
         webhookService = WebhookFactory.createWebhookService(config);
     }

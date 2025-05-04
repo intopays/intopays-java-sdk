@@ -2,12 +2,14 @@ package com.intopays.sdk.core.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.intopays.sdk.core.enums.IntegrationEnum;
 import com.intopays.sdk.core.enums.PixTransactionStatusEnum;
 
 /**
  * Representa uma solicitação e resposta de integração com o sistema de pagamento via Pix.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pix {
 
     // Request
@@ -36,7 +38,7 @@ public class Pix {
      * - `0`: Valor fixo (sem alteração)
      * - `1`: Permite alteração pelo pagador
      */
-    private int amountModificationType;
+    private int amountModificationType = 0;
 
     /**
      * Mensagem adicional visível ao pagador.
@@ -70,7 +72,7 @@ public class Pix {
      * Status atual da cobrança Pix.
      * Pode ser: ACTIVE, COMPLETED, REMOVED_BY_USER_RECEIVER ou REMOVED_BY_PSP.
      */
-    private PixTransactionStatusEnum status;
+    private PixTransactionStatusEnum status = PixTransactionStatusEnum.ACTIVE;
 
     /**
      * Revisão atual da cobrança Pix (utilizado em atualizações).

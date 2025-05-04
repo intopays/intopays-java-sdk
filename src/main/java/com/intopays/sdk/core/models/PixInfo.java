@@ -1,11 +1,14 @@
 package com.intopays.sdk.core.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Representa uma informação adicional incluída na cobrança Pix.
  * Essas informações aparecem no comprovante de pagamento.
  *
  * Exemplo: instruções, número do pedido, referência, etc.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PixInfo {
 
     /**
