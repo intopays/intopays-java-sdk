@@ -2,6 +2,7 @@ package com.intopays.sdk.core.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.intopays.sdk.core.enums.DiscountEnum;
 import com.intopays.sdk.core.enums.FineTypeEnum;
@@ -20,6 +21,7 @@ public class Boleto {
     private long amount;
 
     /** Data de vencimento do boleto */
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date dueDate;
 
     /** Dias após o vencimento para cancelamento automático */
@@ -74,6 +76,7 @@ public class Boleto {
     private double discount1Value = 0;
 
     /** Data limite para o primeiro desconto */
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date discount1Date;
 
     /** Tipo de desconto aplicado */
@@ -86,12 +89,14 @@ public class Boleto {
     private double discount2Value = 0;
 
     /** Data limite para o segundo desconto */
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date discount2Date;
 
     /** Tipo de multa a ser aplicada */
     private FineTypeEnum fineCode = FineTypeEnum.NO_FINE;
 
     /** Data de início da multa */
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date fineDate;
 
     /** Percentual da multa */
@@ -104,6 +109,7 @@ public class Boleto {
     private InterestEnum interestCode = InterestEnum.EXEMPT;
 
     /** Data de início da cobrança de juros */
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
     private Date interestDate;
 
     /** Percentual dos juros */
@@ -152,7 +158,7 @@ public class Boleto {
     private IntegrationEnum integrationType;
 
     /** Status atual do boleto */
-    private PaymentStatusEnum status;
+    private PaymentStatusEnum status = PaymentStatusEnum.OPEN;
 
     public Boleto() {}
 
