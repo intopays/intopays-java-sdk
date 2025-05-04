@@ -51,7 +51,7 @@ public class WebhookRemote {
         
     }
 
-    public List<Webhook> find(Map<String, String> queryParams) throws IOException {
+    public List<Webhook> search(Map<String, String> queryParams) throws IOException {
         StringBuilder urlBuilder = new StringBuilder(this.baseUrl + "/v1/webhooks");
 
         if (queryParams != null && !queryParams.isEmpty()) {
@@ -69,19 +69,34 @@ public class WebhookRemote {
         request.setHeader("Authorization", this.token);
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
+            int statusCode = response.getStatusLine().getStatusCode();
             String responseBody = EntityUtils.toString(response.getEntity());
+
+            if (statusCode < 200 || statusCode >= 300) {
+                throw new IOException("Failed to fetch webhooks. Status: " + statusCode + ". Response: " + responseBody);
+            }
+
             return objectMapper.readValue(responseBody,
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, Webhook.class));
+                   objectMapper.getTypeFactory().constructCollectionType(List.class, Webhook.class)
+            );
         }
     }
 
-    public Webhook delete(int webhookId) throws IOException {
-        HttpDelete request = new HttpDelete(this.baseUrl + "/v1/webhooks/" + webhookId);
+    public Boolean delete(String id) throws IOException {
+        HttpDelete request = new HttpDelete(this.baseUrl + "/v1/webhooks/" + id);
         request.setHeader("Authorization", this.token);
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
-            String responseBody = EntityUtils.toString(response.getEntity());
-            return objectMapper.readValue(responseBody, Webhook.class);
+            int statusCode = response.getStatusLine().getStatusCode();
+//            String responseBody = EntityUtils.toString(response.getEntity());
+
+            if (statusCode < 200 || statusCode >= 300) {
+//                throw new IOException("Failed to delete webhook. Status: " + statusCode + ". Response: " + responseBody);
+              throw new IOException("Failed to delete webhook. Status: " + statusCode);
+            }
+
+//            return objectMapper.readValue(responseBody, Webhook.class);
+            return true;
         }
     }
 }

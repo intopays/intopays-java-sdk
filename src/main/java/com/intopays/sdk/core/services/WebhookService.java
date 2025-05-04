@@ -1,5 +1,6 @@
 package com.intopays.sdk.core.services;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +26,14 @@ public class WebhookService {
         return this.remote.create(webhook);
     }
 
-    public List<Webhook> find(Webhook data) throws Exception {
-        return this.remote.find(data != null ? this.objectMapper.convertValue(data, Map.class) : null);
+    public List<Webhook> search(Webhook data) throws Exception {
+    	Map<String, String> queryParams = new HashMap<String, String>();
+    	queryParams.put("endpoint", data.getEndpoint());
+    	queryParams.put("signature", data.getSignature());
+        return this.remote.search(queryParams);
     }
 
-    public Webhook delete(int id) throws Exception {
+    public Boolean delete(String id) throws Exception {
         return this.remote.delete(id);
     }
 
