@@ -28,6 +28,6 @@ Para mais informações, visite nosso site: [Intopays](https://intopays.com)
 <dependency>
     <groupId>com.github.intopays</groupId>
     <artifactId>intopays-java-sdk</artifactId>
-    <version>Tag</version>
+    <version>v1.0.0</version>
 </dependency>
 ```
