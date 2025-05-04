@@ -1,4 +1,4 @@
-# INTOPAYS SDK (NodeJs)
+# INTOPAYS SDK (Java)
 
 Para mais informações, visite nosso site: [Intopays](https://intopays.com)
 
