@@ -28,8 +28,14 @@ public class WebhookService {
 
     public List<Webhook> search(Webhook data) throws Exception {
     	Map<String, String> queryParams = new HashMap<String, String>();
-    	queryParams.put("endpoint", data.getEndpoint());
-    	queryParams.put("signature", data.getSignature());
+
+    	if (data.getEndpoint() != null) {
+    		queryParams.put("endpoint", data.getEndpoint());
+    	}
+    	if (data.getSignature() != null) {
+        	queryParams.put("signature", data.getSignature());
+    	}
+
         return this.remote.search(queryParams);
     }
 
