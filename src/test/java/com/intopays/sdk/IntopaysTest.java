@@ -1,12 +1,14 @@
 package com.intopays.sdk;
 
-import com.intopays.sdk.core.services.WebhookService;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.intopays.sdk.core.services.WebhookService;
 
 public class IntopaysTest {
-
+    
     @Test
     public void testIntopaysInitializesWebhookService() {
         // Arrange
