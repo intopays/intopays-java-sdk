@@ -242,3 +242,249 @@ public class PixSearchExample {
 
 - `Pix`: Lista de cobranças Pix que atendem aos critérios. Objeto com os dados da cobrança `Pix`, incluindo `qrcode`, `location`, `status` e `url`.
 
+## Boleto
+
+## Criar boleto
+
+Você pode criar boletos utilizando o SDK, com opções de `integração` com bancos como `Banco do Brasil`, `Bradesco`, `Itaú`, entre outros.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.core.models.Boleto;
+import com.intopays.sdk.core.enums.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
+public class BoletoExample {
+    public static void main(String[] args) {
+        // Inicialize o SDK (ver seção de inicialização)
+        Intopays intopays = ...;
+
+        // Configuração do boleto
+        Boleto boleto = new Boleto();
+        boleto.setAmount(new BigDecimal("10.01")); // Valor do boleto: R$10,01
+        boleto.setDueDate(Date.from(LocalDate.now().plusDays(3).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        boleto.setDaysAfterDueDateForCancellation(30);
+        
+        boleto.setPayerName("Lucas Lopes");
+        boleto.setPayerDocument("12345678901");
+        boleto.setPayerEmail("lucas@example.com");
+        boleto.setPayerPhone("51999999999");
+        boleto.setPayerZipCode("12345678");
+        boleto.setPayerAddress("Rua Exemplo");
+        boleto.setPayerNumber("123");
+        boleto.setPayerComplement("Apto 101");
+        boleto.setPayerNeighborhood("Centro");
+        boleto.setPayerCity("Cidade");
+        boleto.setPayerState(StateEnum.SP);
+
+        boleto.setMessageLine1("Obrigado pela preferência!");
+        boleto.setMessageLine2("Vencimento em 3 dias úteis.");
+
+        boleto.setDiscount1Code(DiscountEnum.NO_DISCOUNT);
+        boleto.setFineCode(FineTypeEnum.NO_FINE);
+        boleto.setInterestCode(InterestEnum.EXEMPT);
+
+        boleto.setFinalBeneficiaryName("Empresa Beneficiária");
+        boleto.setFinalBeneficiaryDocument("11111111111");
+        boleto.setFinalBeneficiaryZipCode("87654321");
+        boleto.setFinalBeneficiaryAddress("Rua Final");
+        boleto.setFinalBeneficiaryNeighborhood("Bairro Final");
+        boleto.setFinalBeneficiaryCity("Cidade Final");
+        boleto.setFinalBeneficiaryState(StateEnum.RJ);
+
+        boleto.setIntegrationType(IntegrationEnum.SICOOB); // Banco integrador
+
+        try {
+            Boleto resultado = intopays.boleto.create(boleto);
+            System.out.println("Boleto criado com sucesso!");
+            System.out.println("Código de barras: " + resultado.getBarcode());
+            System.out.println("URL: " + resultado.getBoletoUrl());
+            System.out.println("Status: " + resultado.getStatus());
+        } catch (Exception e) {
+            System.err.println("Erro ao gerar boleto: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+
+- `amount`: O valor do boleto (em reais).
+- `dueDate`: A data de vencimento do boleto.
+- `daysAfterDueDateForCancellation`: Número de dias após o vencimento para cancelamento do boleto.
+- `payerDocument`: O CPF ou CNPJ do pagador.
+- `payerName`: Nome do pagador.
+- `payerEmail`: E-mail do pagador.
+- `payerPhone`: Telefone do pagador.
+- `payerZipCode`: CEP do pagador.
+- `payerNumber`: Número do endereço do pagador.
+- `payerComplement`: Complemento do endereço do pagador.
+- `payerNeighborhood`: Bairro do pagador.
+- `payerCity`: Cidade do pagador.
+- `payerState`: Estado do pagador (use o enum StateEnum para escolher).
+- `payerAddress`: Endereço do pagador.
+- `messageLine1`: Mensagem personalizada (linha 1).
+- `messageLine2`: Mensagem personalizada (linha 2).
+- `discount1Code`: Código do desconto 1 (use o enum DiscountEnum para escolher).
+- `discount1Rate`: Taxa de desconto 1.
+- `discount1Value`: Valor do desconto 1.
+- `discount1Date`: Data do desconto 1.
+- `discount2Code`: Código do desconto 2 (use o enum DiscountEnum para escolher).
+- `discount2Rate`: Taxa de desconto 2.
+- `discount2Value`: Valor do desconto 2.
+- `discount2Date`: Data do desconto 2.
+- `fineCode`: Código de multa (use o enum FineTypeEnum para escolher).
+- `fineDate`: Data da multa.
+- `fineValue`: Valor da multa.
+- `fineRate`: Taxa da multa.
+- `interestCode`: Código de juros (use o enum InterestEnum para escolher).
+- `interestDate`: Data dos juros.
+- `interestRate`: Taxa de juros.
+- `interestValue`: Valor dos juros.
+- `finalBeneficiaryName`: Nome do beneficiário final.
+- `finalBeneficiaryDocument`: CPF ou CNPJ do beneficiário final.
+- `finalBeneficiaryZipCode`: CEP do beneficiário final.
+- `finalBeneficiaryAddress`: Endereço do beneficiário final.
+- `finalBeneficiaryNeighborhood`: Bairro do beneficiário final.
+- `finalBeneficiaryCity`: Cidade do beneficiário final.
+- `finalBeneficiaryState`: Estado do beneficiário final (use o enum StateEnum para escolher).
+- `integrationType`: Tipo de integração (use o enum IntegrationEnum para escolher).
+
+#### Retorno:
+
+`Boleto`: Objeto contendo os dados da cobrança do boleto, incluindo `barcode`, `boletoUrl`, `dueDate`, `amount`, `status`, entre outros.
+
+## Encontrar Boleto
+
+Você pode encontrar um boleto específico utilizando seu ID com o SDK de forma simples.
+
+##### Exemplo de Uso
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.core.models.Boleto;
+
+public class BuscarBoletoExample {
+    public static void main(String[] args) {
+        // Inicialize o SDK (ver seção de inicialização)
+        Intopays intopays = ...;
+
+        try {
+            Long boletoId = 123L; // ID do boleto que você deseja buscar
+            Boleto boleto = intopays.boleto.find(boletoId);
+
+            System.out.println("Boleto encontrado:");
+            System.out.println("ID: " + boleto.getId());
+            System.out.println("Valor: " + boleto.getAmount());
+            System.out.println("Vencimento: " + boleto.getDueDate());
+            System.out.println("Status: " + boleto.getStatus());
+            System.out.println("Código de barras: " + boleto.getBarcode());
+            System.out.println("URL: " + boleto.getBoletoUrl());
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar boleto: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+- `id`: ID do boleto que será encontrado. Este ID é retornado ao criar o boleto.
+
+#### Retorno:
+- `Boleto`: Objeto contendo os dados do boleto, como id, amount, dueDate, status e outros detalhes relacionados.
+
+## Cancelar Boleto
+
+Você pode cancelar uma cobrança de boleto utilizando o SDK de forma simples.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.modules.boleto.entity.Boleto;
+
+public class CancelarBoletoExample {
+    public static void main(String[] args) {
+        // Inicialize o SDK (ver seção de autenticação e configuração)
+        Intopays intopays = ...;
+
+        try {
+            Long boletoId = 123L; // ID do boleto que será cancelado
+            Boleto boletoCancelado = intopays.boleto.voidBoleto(boletoId);
+
+            System.out.println("Boleto cancelado com sucesso!");
+            System.out.println("ID: " + boletoCancelado.getId());
+            System.out.println("Status: " + boletoCancelado.getStatus());
+        } catch (Exception e) {
+            System.err.println("Erro ao cancelar boleto: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+
+- `id`: ID do boleto que será cancelado. Este ID é retornado ao criar o boleto.
+
+#### Retorno:
+
+- `Boleto`: Objeto com a confirmação do cancelamento do boleto, incluindo o status da operação e a mensagem de sucesso ou erro.
+
+
+## Pesquisar Boleto
+
+Você pode pesquisar boletos com base em diferentes critérios usando o SDK de forma simples.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.modules.boleto.entity.Boleto;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
+public class PesquisarBoletoExample {
+    public static void main(String[] args) {
+        // Inicialize o SDK (ver seção de autenticação e configuração)
+        Intopays intopays = ...;
+
+        try {
+            Boleto filtro = new Boleto();
+            filtro.setPayerName("Luffrs");
+            filtro.setDueDate(Date.from(LocalDate.of(2025, 5, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            List<Boleto> boletos = intopays.boleto.search(filtro);
+
+            for (Boleto boleto : boletos) {
+                System.out.println("ID: " + boleto.getId());
+                System.out.println("Nome do Pagador: " + boleto.getPayerName());
+                System.out.println("Valor: R$" + boleto.getAmount());
+                System.out.println("Status: " + boleto.getStatus());
+                System.out.println("------------------------------");
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao pesquisar boletos: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+- `payerName`: Nome do pagador (opcional).
+- `dueDate`: Data de vencimento do boleto (opcional).
+- `status`: Status do boleto, como "PENDENTE", "PAGO", etc. (opcional).
+
+#### Retorno:
+- `Array<Boleto>`: Lista de objetos que representam os boletos encontrados com os critérios de pesquisa. Cada objeto de boleto pode incluir informações como `id`, `amount`, `dueDate`, `payerName`, `status`, entre outros detalhes.
