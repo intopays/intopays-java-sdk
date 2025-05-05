@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.intopays.sdk.Intopays;
 import com.intopays.sdk.IntopaysConstructor;
-import com.intopays.sdk.app.factories.PixFactory;
 import com.intopays.sdk.core.enums.EnvironmentTypeEnum;
 import com.intopays.sdk.core.enums.IntegrationEnum;
 import com.intopays.sdk.core.models.Pix;
@@ -28,16 +28,17 @@ import com.intopays.sdk.infra.config.Environment;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PixServiceTest {
-
-    private PixService pixService;
     private Pix createdPix;
-
+    private Intopays intopays;
+    
     @BeforeEach
     public void setUp() {
-    	IntopaysConstructor config = new IntopaysConstructor(Environment.get(EnvironmentTypeEnum.TEST).getToken(), EnvironmentTypeEnum.TEST);
-        pixService = PixFactory.createPixService(config);
+        this.intopays = new Intopays(new IntopaysConstructor(
+            Environment.get(EnvironmentTypeEnum.TEST).getToken(), 
+            EnvironmentTypeEnum.TEST
+        ));
     }
-
+    
     @Test
     @Order(1)
     public void shouldCreatePixSuccessfully() throws IOException {
@@ -59,7 +60,7 @@ public class PixServiceTest {
         expectedPix.setIntegrationType(IntegrationEnum.SICOOB);
         
         // Act
-        Pix receivedPix = this.pixService.create(expectedPix);
+        Pix receivedPix = this.intopays.pix.create(expectedPix);
         this.createdPix = receivedPix;  // Storing for further tests
         // Assert
         assertNotNull(receivedPix);
@@ -70,7 +71,7 @@ public class PixServiceTest {
     @Order(2)
     public void shouldSearchPixSuccessfully() throws IOException {
         // Act
-        List<Pix> foundPixList = this.pixService.search(this.createdPix);
+        List<Pix> foundPixList = this.intopays.pix.search(this.createdPix);
 
         // Assert
         assertTrue(foundPixList.size() > 0);
@@ -84,7 +85,7 @@ public class PixServiceTest {
         String id = String.valueOf(createdPix.getId());
 
         // Act
-        Pix foundPix = this.pixService.find(id);
+        Pix foundPix = this.intopays.pix.find(id);
 
         // Assert
         assertNotNull(foundPix);
@@ -99,7 +100,7 @@ public class PixServiceTest {
 
         // Act & Assert
         assertThrows(IOException.class, () -> {
-            this.pixService.find(invalidId);
+        	this.intopays.pix.find(invalidId);
         });
     }
 }

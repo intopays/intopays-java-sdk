@@ -1,5 +1,6 @@
 package com.intopays.sdk.core.models;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,7 +19,7 @@ public class Boleto {
     private long id;
 
     /** Valor do boleto em centavos */
-    private long amount;
+    private BigDecimal amount = new BigDecimal("0");
 
     /** Data de vencimento do boleto */
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
@@ -172,11 +173,11 @@ public class Boleto {
         this.id = id;
     }
 
-    public long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

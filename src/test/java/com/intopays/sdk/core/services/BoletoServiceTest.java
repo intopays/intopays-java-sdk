@@ -1,18 +1,27 @@
 package com.intopays.sdk.core.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 
+import com.intopays.sdk.Intopays;
 import com.intopays.sdk.IntopaysConstructor;
-import com.intopays.sdk.app.factories.BoletoFactory;
 import com.intopays.sdk.core.enums.EnvironmentTypeEnum;
 import com.intopays.sdk.core.enums.IntegrationEnum;
 import com.intopays.sdk.core.enums.PaymentStatusEnum;
@@ -23,24 +32,22 @@ import com.intopays.sdk.infra.config.Environment;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BoletoServiceTest {
-
-    private BoletoService boletoService;
     private Boleto createdBoleto;
-
+    private Intopays intopays;
+   
     @BeforeEach
     public void setUp() {
-        IntopaysConstructor config = new IntopaysConstructor(
+        this.intopays = new Intopays(new IntopaysConstructor(
             Environment.get(EnvironmentTypeEnum.TEST).getToken(), 
             EnvironmentTypeEnum.TEST
-        );
-        boletoService = BoletoFactory.createBoletoService(config);
+        ));
     }
 
     @Test
     @Order(1)
     public void shouldCreateBoletoSuccessfully() throws IOException {
         Boleto boleto = new Boleto();
-        boleto.setAmount(1000); // R$10,00
+        boleto.setAmount(new BigDecimal("10.01")); // R$10,00
         boleto.setDueDate(Date.from(LocalDate.now().plusDays(3).atStartOfDay(ZoneId.systemDefault()).toInstant()));
         boleto.setPayerName("Lucas Lopes");
         boleto.setPayerDocument("12345678901");
@@ -53,7 +60,7 @@ public class BoletoServiceTest {
         boleto.setPayerState(StateEnum.SP);
         boleto.setIntegrationType(IntegrationEnum.SICOOB);
         boleto.setDaysAfterDueDateForCancellation(30);
-        Boleto result = boletoService.create(boleto);
+        Boleto result = this.intopays.boleto.create(boleto);
         this.createdBoleto = result;
 
         assertNotNull(result);
@@ -67,7 +74,7 @@ public class BoletoServiceTest {
         Boleto filter = new Boleto();
         filter.setId(this.createdBoleto.getId());
 
-        List<Boleto> results = boletoService.search(filter);
+        List<Boleto> results = this.intopays.boleto.search(filter);
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -79,7 +86,7 @@ public class BoletoServiceTest {
     public void shouldFindBoletoSuccessfully() throws IOException {
         String id = String.valueOf(createdBoleto.getId());
 
-        Boleto found = boletoService.find(id);
+        Boleto found = this.intopays.boleto.find(id);
 
         assertNotNull(found);
         assertEquals(createdBoleto.getId(), found.getId());
@@ -91,7 +98,7 @@ public class BoletoServiceTest {
         String invalidId = UUID.randomUUID().toString();
 
         assertThrows(IOException.class, () -> {
-            boletoService.find(invalidId);
+            this.intopays.boleto.find(invalidId);
         });
     }
 
@@ -100,7 +107,7 @@ public class BoletoServiceTest {
     public void shouldCancelBoletoSuccessfully() throws IOException {
         String id = String.valueOf(createdBoleto.getId());
 
-        Boleto canceled = boletoService.cancel(id);
+        Boleto canceled = this.intopays.boleto.cancel(id);
 
         assertNotNull(canceled);
         assertEquals(PaymentStatusEnum.PROCESSING, canceled.getStatus()); // Adjust based on your enum
@@ -112,7 +119,7 @@ public class BoletoServiceTest {
         String invalidId = UUID.randomUUID().toString();
 
         assertThrows(IOException.class, () -> {
-            boletoService.cancel(invalidId);
+            this.intopays.boleto.cancel(invalidId);
         });
     }
 }

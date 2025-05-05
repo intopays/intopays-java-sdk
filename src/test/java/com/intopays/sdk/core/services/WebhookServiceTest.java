@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.intopays.sdk.Intopays;
 import com.intopays.sdk.IntopaysConstructor;
-import com.intopays.sdk.app.factories.WebhookFactory;
 import com.intopays.sdk.core.enums.EnvironmentTypeEnum;
 import com.intopays.sdk.core.models.Webhook;
 import com.intopays.sdk.infra.config.Environment;
@@ -24,14 +24,15 @@ import com.intopays.sdk.infra.config.Environment;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WebhookServiceTest {
-	private WebhookService webhookService;
 	private Webhook createdWebhook; 
-	
+    private Intopays intopays;
+    
     @BeforeEach
     public void setUp() {
     	IntopaysConstructor config = new IntopaysConstructor(Environment.get(EnvironmentTypeEnum.TEST).getToken(), EnvironmentTypeEnum.TEST);
-        webhookService = WebhookFactory.createWebhookService(config);
+        this.intopays = new Intopays(config);
     }
+    
 
     @Test
     @Order(1)
@@ -42,7 +43,7 @@ public class WebhookServiceTest {
         expectedWebhook.setEndpoint(endpoint);
 
         // Act
-        Webhook reveived = this.webhookService.create(expectedWebhook);
+        Webhook reveived = this.intopays.webhook.create(expectedWebhook);
         this.createdWebhook = reveived;
         // Assert
         assertEquals(endpoint, reveived.getEndpoint());
@@ -52,7 +53,7 @@ public class WebhookServiceTest {
     @Test
     @Order(2)
     public void shouldFindWebhooksSuccessfully() throws Exception {
-        List<Webhook> webhooks = webhookService.search(this.createdWebhook);
+        List<Webhook> webhooks = this.intopays.webhook.search(this.createdWebhook);
         assertFalse(webhooks.isEmpty());
         assertTrue(webhooks.stream().anyMatch(w -> this.createdWebhook.getEndpoint().equals(w.getEndpoint())));
     }
@@ -76,14 +77,14 @@ public class WebhookServiceTest {
             hexString.append(hex);
         }
 
-        boolean result = webhookService.verifySignature(this.createdWebhook, hexString.toString(), secret);
+        boolean result = this.intopays.webhook.verifySignature(this.createdWebhook, hexString.toString(), secret);
         assertTrue(result);
     }
     
     @Test
     @Order(4)
     public void shouldFailVerificationWithInvalidSignature() {
-        boolean result = webhookService.verifySignature(this.createdWebhook, "invalidsignature", "secret");
+        boolean result = this.intopays.webhook.verifySignature(this.createdWebhook, "invalidsignature", "secret");
         assertFalse(result);
     }
     
@@ -91,7 +92,7 @@ public class WebhookServiceTest {
     @Test
     @Order(5)
     public void shouldDeleteWebhookSuccessfully() throws Exception {
-        Boolean deleted = this.webhookService.delete(String.valueOf(this.createdWebhook.getId()));
+        Boolean deleted = this.intopays.webhook.delete(String.valueOf(this.createdWebhook.getId()));
         assertEquals(deleted, true);
     }
 }

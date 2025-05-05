@@ -1,6 +1,7 @@
 package com.intopays.sdk.core.services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class BoletoService {
         Map<String, String> queryParams = new HashMap<>();
 
         if (data.getId() > 0) queryParams.put("id", String.valueOf(data.getId()));
-        if (data.getAmount() > 0) queryParams.put("amount", String.valueOf(data.getAmount()));
+        if (data.getAmount().compareTo(BigDecimal.ZERO) > 0) queryParams.put("amount", String.valueOf(data.getAmount()));
         if (data.getDueDate() != null) queryParams.put("dueDate", data.getDueDate().toString());
         if (data.getDaysAfterDueDateForCancellation() > 0) queryParams.put("daysAfterDueDateForCancellation", String.valueOf(data.getDaysAfterDueDateForCancellation()));
         if (data.getPayerDocument() != null) queryParams.put("payerDocument", data.getPayerDocument());
