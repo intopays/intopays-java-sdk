@@ -414,7 +414,7 @@ public class CancelarBoletoExample {
 
         try {
             Long boletoId = 123L; // ID do boleto que será cancelado
-            Boleto boletoCancelado = intopays.boleto.voidBoleto(boletoId);
+            Boleto boletoCancelado = intopays.boleto.cancel(boletoId);
 
             System.out.println("Boleto cancelado com sucesso!");
             System.out.println("ID: " + boletoCancelado.getId());
