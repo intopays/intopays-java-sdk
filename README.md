@@ -405,7 +405,7 @@ Você pode cancelar uma cobrança de boleto utilizando o SDK de forma simples.
 
 ```java
 import com.intopays.sdk.Intopays;
-import com.intopays.sdk.modules.boleto.entity.Boleto;
+import com.intopays.sdk.core.models.Boleto;
 
 public class CancelarBoletoExample {
     public static void main(String[] args) {
@@ -444,7 +444,7 @@ Você pode pesquisar boletos com base em diferentes critérios usando o SDK de f
 
 ```java
 import com.intopays.sdk.Intopays;
-import com.intopays.sdk.modules.boleto.entity.Boleto;
+import com.intopays.sdk.core.models.Boleto;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -484,7 +484,7 @@ public class PesquisarBoletoExample {
 - `status`: Status do boleto, como "PENDENTE", "PAGO", etc. (opcional).
 
 #### Retorno:
-- `Array<Boleto>`: Lista de objetos que representam os boletos encontrados com os critérios de pesquisa. Cada objeto de boleto pode incluir informações como `id`, `amount`, `dueDate`, `payerName`, `status`, entre outros detalhes.
+- `List<Boleto>`: Lista de objetos que representam os boletos encontrados com os critérios de pesquisa. Cada objeto de boleto pode incluir informações como `id`, `amount`, `dueDate`, `payerName`, `status`, entre outros detalhes.
 
 ## Webhook
 
@@ -496,7 +496,7 @@ Você pode registrar um novo webhook utilizando o método create do SDK Java. O 
 
 ```java
 import com.intopays.sdk.Intopays;
-import com.intopays.sdk.modules.webhook.entity.Webhook;
+import com.intopays.sdk.core.models.Webhook;
 
 import java.util.UUID;
 
@@ -577,7 +577,7 @@ Você também pode pesquisar webhooks por endpoint usando a função `find` do o
 
 ```java
 import com.intopays.sdk.Intopays;
-import com.intopays.sdk.modules.webhook.entity.Webhook;
+import com.intopays.sdk.core.models.Webhook;
 
 import java.util.List;
 
@@ -607,7 +607,7 @@ public class PesquisarWebhookExample {
 
 #### Retorno:
 
-- `Array<Webhook>`: Lista de objetos que representam webhooks.
+- `List<Webhook>`: Lista de objetos que representam webhooks.
 
 ## Excluir Webhooks
 
