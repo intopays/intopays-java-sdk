@@ -80,9 +80,6 @@ public class Main {
   - [Listar Webhooks](#listar-webhooks)
   - [Pesquisar Webhooks](#pesquisar-webhooks)
   - [Excluir Webhooks](#excluir-webhooks)
-  - [Webhook Signature](#webhook-signature)
-  - [Recebimento de Evento de Boleto via Webhook](#recebimento-de-evento-de-boleto-via-webhook)
-  - [Recebimento de Evento PIX via Webhook](#recebimento-de-evento-pix-via-webhook)
 
  ## Pix
 
@@ -488,3 +485,159 @@ public class PesquisarBoletoExample {
 
 #### Retorno:
 - `Array<Boleto>`: Lista de objetos que representam os boletos encontrados com os critérios de pesquisa. Cada objeto de boleto pode incluir informações como `id`, `amount`, `dueDate`, `payerName`, `status`, entre outros detalhes.
+
+## Webhook
+
+## Criar Webhook
+
+Você pode registrar um novo webhook utilizando o método create do SDK Java. O webhook será utilizado para receber notificações de eventos, como a confirmação de pagamento de boletos e pix.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.modules.webhook.entity.Webhook;
+
+import java.util.UUID;
+
+public class CriarWebhookExample {
+    public static void main(String[] args) {
+        // Inicialize o SDK (ver seção de autenticação e configuração)
+        Intopays intopays = ...;
+
+        try {
+            String endpoint = "https://intopays.com/" + UUID.randomUUID();
+
+            Webhook novoWebhook = new Webhook();
+            novoWebhook.setEndpoint(endpoint);
+
+            Webhook recebido = intopays.webhook.create(novoWebhook);
+
+            System.out.println("Webhook criado com sucesso!");
+            System.out.println("ID: " + recebido.getId());
+            System.out.println("Endpoint: " + recebido.getEndpoint());
+        } catch (Exception e) {
+            System.err.println("Erro ao criar webhook: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+
+- `payload.endpoint`: Endpoint responsável por receber eventos via webhook.
+
+#### Retorno:
+
+- `Webhook`: Objeto que representa um webhook.
+
+
+## Listar Webhooks
+
+Você pode listar todos os webhooks registrados usando a função `find` do objeto `intopays.webhooks`.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.core.models.Webhook;
+
+import java.util.List;
+
+public class PesquisarWebhookExample {
+    public static void main(String[] args) {
+        Intopays intopays = ...;
+
+        try {
+            Webhook filtro = new Webhook();
+            filtro.setEndpoint("https://exemple.intopays.com/webhooks");
+
+            List<Webhook> encontrados = intopays.webhook.find(filtro);
+            for (Webhook w : encontrados) {
+                System.out.println("Encontrado: " + w.getId() + " -> " + w.getEndpoint());
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao pesquisar webhooks: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Retorno:
+
+- `Array<Webhook>`: Lista de objetos que representam webhooks.
+
+## Pesquisar Webhooks
+
+Você também pode pesquisar webhooks por endpoint usando a função `find` do objeto `intopays.webhooks`.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+import com.intopays.sdk.modules.webhook.entity.Webhook;
+
+import java.util.List;
+
+public class PesquisarWebhookExample {
+    public static void main(String[] args) {
+        Intopays intopays = ...;
+
+        try {
+            Webhook filtro = new Webhook();
+            filtro.setEndpoint("https://exemple.intopays.com/webhooks");
+
+            List<Webhook> encontrados = intopays.webhook.find(filtro);
+            for (Webhook w : encontrados) {
+                System.out.println("Encontrado: " + w.getId() + " -> " + w.getEndpoint());
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao pesquisar webhooks: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+
+- `endpoint`: Endpoint a ser especificado durante a consulta..
+
+#### Retorno:
+
+- `Array<Webhook>`: Lista de objetos que representam webhooks.
+
+## Excluir Webhooks
+
+Você pode excluir um webhook usando a função `delete` do objeto `intopays.webhooks`.
+
+##### Exemplo de Uso
+
+```java
+import com.intopays.sdk.Intopays;
+
+public class DeletarWebhookExample {
+    public static void main(String[] args) {
+        Intopays intopays = ...;
+
+        try {
+            int webhookId = 123;
+            intopays.webhook.delete(webhookId);
+            System.out.println("Webhook excluído com sucesso!");
+        } catch (Exception e) {
+            System.err.println("Erro ao excluir webhook: " + e.getMessage());
+        }
+    }
+}
+
+```
+
+#### Parâmetros:
+
+- `webhookId`: ID do webhook a ser deletado.
+
+#### Retorno:
+
+- `void`: Sem retorno após a exclusão do webhook
