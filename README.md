@@ -29,7 +29,7 @@ Adicione a dependência no seu arquivo pom.xml:
 <dependency>
     <groupId>com.github.intopays</groupId>
     <artifactId>intopays-java-sdk</artifactId>
-    <version>v1.3.0</version>
+    <version>v1.3.1</version>
 </dependency>
 ```
 ## Inicialização
